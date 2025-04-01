@@ -1,69 +1,35 @@
-// Configuração inicial
-document.addEventListener('DOMContentLoaded', function() {
-    // Configurar timestamp do formulário
-    const formTimestamp = document.getElementById('formTimestamp');
-    if(formTimestamp) {
-        formTimestamp.value = new Date().toISOString();
-    }
-
-    // Gerenciar mensagens de status
-    const urlParams = new URLSearchParams(window.location.search);
-    const formStatus = document.getElementById('form-status');
-
-    if (urlParams.has('success')) {
-        formStatus.innerHTML = `
-            <div class="success-message">
-                ✔️ Mensagem enviada com sucesso!
-            </div>
-        `;
-        window.history.replaceState({}, document.title, window.location.pathname + '#contato');
-    }
-
-    if (urlParams.has('error')) {
-        formStatus.innerHTML = `
-            <div class="error-message">
-                ❌ Ocorreu um erro ao enviar a mensagem. Tente novamente.
-            </div>
-        `;
-        window.history.replaceState({}, document.title, window.location.pathname + '#contato');
-    }
-
-    // Configurar envio do formulário
-    const contactForm = document.getElementById('contatoForm');
-    if(contactForm) {
-        contactForm.addEventListener('submit', handleFormSubmit);
+document.addEventListener('DOMContentLoaded', function () {
+    const form = document.getElementById('contatoForm'); 
+    
+    if (form) {
+        form.addEventListener('submit', handleFormSubmit);
+    } else {
+        console.error("Formulário não encontrado.");
     }
 });
 
-// Função para lidar com o envio do formulário
-function handleFormSubmit(e) {
-    e.preventDefault();
-    
-    const form = e.target;
-    const button = form.querySelector('button[type="submit"]');
-    const originalButtonText = button.innerHTML;
-    
-    // Mostrar estado de carregamento
-    button.innerHTML = '<div class="loader"></div>';
-    button.disabled = true;
+function handleFormSubmit(event) {
+    event.preventDefault(); 
 
-    // Enviar dados
-    fetch(form.action, {
+    const formData = new FormData(event.target);
+
+    formData.append('timestamp', new Date().toISOString());
+    formData.append('honeypot', '');
+
+    fetch('https://script.google.com/macros/s/AKfycbwcbn2Hwbp_YEuzOQ_D5yuPIqs0CC9_hliAOOfGq5In41Mh2wXVx2UPx7A0icIXFYeO5A/exec', {
         method: 'POST',
-        body: new URLSearchParams(new FormData(form)),
-        headers: {
-            'Content-Type': 'application/x-www-form-urlencoded'
+        body: formData,
+    })
+    .then(response => response.json())  
+    .then(data => {
+        if (data.status === "success") {
+            window.location.href = "obrigado.html";
+        } else {
+            window.location.href = "obrigado.html";
         }
     })
-    .then(response => response.text())
-    .then(data => {
-        window.location.href = window.location.href.split('?')[0] + '?success=true#contato';
-    })
     .catch(error => {
-        window.location.href = window.location.href.split('?')[0] + '?error=true#contato';
-    })
-    .finally(() => {
-        button.innerHTML = originalButtonText;
-        button.disabled = false;
+        console.error('Erro ao enviar dados:', error);
+        window.location.href = "obrigado.html";
     });
 }

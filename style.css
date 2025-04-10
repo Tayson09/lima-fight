@@ -1,6 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=League+Spartan:wght@400;700&display=swap');
 
-
 :root {
   --vermelho: #A80C1B;
   --preto: #000000;
@@ -8,6 +7,7 @@
   --font-family: 'League Spartan', sans-serif;
 }
 
+/* Reset e configurações básicas */
 * {
   margin: 0;
   padding: 0;
@@ -17,70 +17,311 @@
 body {
   line-height: 1.6;
   font-family: var(--font-family);
+  position: relative;
 }
 
+body::after {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 10px;
+  background: linear-gradient(to bottom, 
+    rgba(168,12,27,0.3) 0%, 
+    rgba(168,12,27,0) 100%
+  );
+  z-index: 1001;
+}
+
+/* Container padrão para desktop */
 .container {
   max-width: 1200px;
   margin: 0 auto;
   padding: 0 20px;
 }
 
+/* Header e Navegação */
 header {
-  background-color: var(--preto);
-  padding: 2px 0; 
+  background: linear-gradient(145deg, 
+    rgba(10, 10, 10, 0.98) 0%,
+    rgba(20, 20, 20, 0.98) 100%);
+  backdrop-filter: blur(15px) saturate(180%);
   position: fixed;
   width: 100%;
   z-index: 1000;
+  border-bottom: 1px solid rgba(168, 12, 27, 0.3);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+  transition: all 0.4s cubic-bezier(0.215, 0.61, 0.355, 1);
+  padding: 12px 0;
+}
+
+.header-content {
   display: flex;
-  align-items: center;
   justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  /* Se quiser permitir quebra de linha no mobile, use flex-wrap. 
+     Mas no desktop isso pode causar o menu a ir pra 2ª linha. */
+  /* flex-wrap: wrap; */
 }
 
-.logo img {
-  height: 140px;
-  display: block;
-}
-nav{
-  margin: 0;
-}
-.nav-links {
-  list-style: none;
-  display: flex;
-  gap: 20px;
-}
-.nav-links a {
-  text-decoration: none;
+/* Logo */
+.logo {
+  font-size: 2rem;
   color: var(--branco);
-  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 3px;
+  font-weight: 700;
+  text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+  margin: 0;
+  position: relative;
+  white-space: nowrap; /* Impede quebra de linha no logo */
 }
 
+.logo span:first-child {
+  color: var(--vermelho);
+  font-weight: 900;
+  text-shadow: 0 0 15px rgba(168, 12, 27, 0.4);
+}
+
+/* Efeito sublinhado animado no logo */
+.logo::before {
+  content: '';
+  position: absolute;
+  bottom: -5px;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background: var(--vermelho);
+  transform: scaleX(0);
+  transform-origin: right;
+  transition: transform 0.6s cubic-bezier(0.165, 0.84, 0.44, 1);
+}
+
+.logo:hover::before {
+  transform: scaleX(1);
+  transform-origin: left;
+}
+
+/* Nav Links - desktop */
+.nav-links {
+  display: flex;
+  gap: 35px;
+}
+
+.nav-links a {
+  position: relative;
+  color: var(--branco);
+  text-decoration: none;
+  font-weight: 500;
+  padding: 12px 0;
+  transition: all 0.3s ease;
+  font-size: 1.1rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  background: white;
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.nav-links a::before {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background: var(--vermelho);
+  transform: scaleX(0);
+  transform-origin: right;
+  transition: transform 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+}
+
+.nav-links a:hover {
+  animation: gradientShift 1.5s linear infinite;
+  background-color: #A80C1B;
+}
+
+.nav-links a:hover::before {
+  transform: scaleX(1);
+  transform-origin: left;
+}
+
+@keyframes gradientShift {
+  to {
+    background-position: 200% center;
+  }
+}
+/* Por padrão, o menu-toggle fica escondido */
+.menu-toggle {
+  display: none;
+}
+
+/* Exemplo de estilos para mobile, utilizando media queries */
+@media (max-width: 768px) {
+  /* Exibe o menu toggle apenas em telas menores */
+  .menu-toggle {
+    display: flex; /* ou block, conforme sua necessidade */
+    position: relative;
+    width: 40px;
+    height: 40px;
+    cursor: pointer;
+    z-index: 9999;
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* Barra central */
+  .hamburger {
+    width: 30px;
+    height: 3px;
+    background: var(--branco);
+    position: absolute; 
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    transition: all 0.3s ease;
+  }
+
+  /* Barras pseudo */
+  .hamburger::before,
+  .hamburger::after {
+    content: "";
+    width: 30px;
+    height: 3px;
+    background: var(--branco);
+    position: absolute;
+    left: 0; 
+    transition: all 0.3s ease;
+  }
+
+  .hamburger::before {
+    transform: translateY(-8px);
+  }
+  .hamburger::after {
+    transform: translateY(8px);
+  }
+
+  /* Ao clicar, transforma o menu em "X" */
+  .menu-toggle.active .hamburger {
+    background: transparent;
+  }
+  .menu-toggle.active .hamburger::before {
+    transform: rotate(45deg);
+  }
+  .menu-toggle.active .hamburger::after {
+    transform: rotate(-45deg);
+  }
+
+  /* Exiba o menu mobile (nav-links) com os ajustes existentes */
+  .nav-links {
+    position: fixed;
+    top: 0;
+    right: -100%;
+    height: 100vh;
+    width: 280px;
+    background: rgba(10, 10, 10, 0.98);
+    backdrop-filter: blur(25px);
+    flex-direction: column;
+    padding: 100px 30px;
+    transition: all 0.6s cubic-bezier(0.77, 0, 0.175, 1);
+    box-shadow: -10px 0 50px rgba(0, 0, 0, 0.3);
+  }
+  .nav-links.active {
+    right: 0;
+  }
+}
+
+
+.scroll-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 3px;
+  background: var(--vermelho);
+  z-index: 1001;
+  transition: width 0.3s ease-out;
+}
+
+/* Efeito de Partículas */
+.nav-particle {
+  position: absolute;
+  width: 3px;
+  height: 3px;
+  background: var(--vermelho);
+  border-radius: 50%;
+  pointer-events: none;
+  opacity: 0;
+  animation: particleFloat 3s ease-out infinite;
+}
+
+@keyframes particleFloat {
+  0% {
+    transform: translateY(0) translateX(0);
+    opacity: 0.8;
+  }
+  100% {
+    transform: translateY(-100px) translateX(50px);
+    opacity: 0;
+  }
+}
+
+/* Header scroll */
+.header-scrolled {
+  box-shadow: 0 15px 40px rgba(168, 12, 27, 0.15);
+  border-bottom: 1px solid rgba(168, 12, 27, 0.5);
+  padding: 8px 0;
+}
+
+/* Seção Hero */
 .hero {
   background: linear-gradient(rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.8)),
     url('https://images.unsplash.com/photo-1550345332-09e3ac987658');
   background-size: cover;
   background-position: center;
+  background-attachment: fixed;
   height: 100vh;
   display: flex;
-  flex-direction: column; 
+  flex-direction: column;
   align-items: center;
   justify-content: center;
   text-align: center;
   color: var(--branco);
-  padding-top: 80px; 
+  padding-top: 140px;
 }
 
 .hero img {
-  display: block;
-  margin: 0 auto 20px; 
-  height: 150px;       
+  height: 250px;
+  width: auto;
+  max-width: 100%;
+  opacity: 0;
+  animation: fadeIn 1s ease-out forwards;
+  margin-bottom: 30px;
+  transition: transform 0.3s ease;
 }
 
-.hero .logo {
-  margin-bottom: 20px;
+.hero img:hover {
+  transform: scale(1.05);
 }
-.hero .logo img {
-  height: 100px;
-  width: auto;
+
+.hero-content {
+  opacity: 0;
+  animation: fadeIn 1s ease-out forwards;
+  animation-delay: 0.5s;
+  position: relative;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .hero-content h1 {
@@ -90,60 +331,76 @@ nav{
 }
 
 .hero-content p {
-  font-size: 1.2em;
+  font-size: 1.4em;
   margin-bottom: 30px;
 }
 
-.cta-button {
-  background-color: var(--vermelho);
-  color: var(--branco);
-  padding: 15px 40px;
-  border: none;
-  border-radius: 5px;
-  font-size: 1.1em;
-  cursor: pointer;
-  transition: background-color 0.3s;
-  text-decoration: none;
-}
-.cta-button:hover {
-  background-color: #c10510;
+/* Indicador de Scroll */
+.scroll-indicator {
+  position: absolute;
+  bottom: 40px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 100;
 }
 
+.chevron {
+  width: 20px;
+  height: 4px;
+  background: var(--vermelho);
+  margin: 4px 0;
+  animation: pulseArrow 1.5s infinite;
+  opacity: 0.8;
+}
+
+.chevron:nth-child(1) {
+  transform: rotate(45deg) translateX(4px);
+}
+.chevron:nth-child(2) {
+  transform: rotate(-45deg) translateX(-4px);
+}
+.chevron:nth-child(3) {
+  opacity: 0.5;
+  animation-delay: 0.5s;
+}
+
+@keyframes pulseArrow {
+  0% {
+    transform: scale(1);
+    opacity: 0.8;
+  }
+  50% {
+    transform: scale(1.2);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 0.8;
+  }
+}
+
+/* Seções Gerais */
+section {
+  padding: 120px 0;
+  scroll-margin-top: 80px;
+}
+
+/* Modalidades */
 .modalidades {
-  padding: 80px 0;
   background-color: var(--branco);
 }
+
 .modalidades h2 {
   text-align: center;
   font-size: 2.5em;
   margin-bottom: 50px;
   color: var(--preto);
 }
+
 .cards {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 30px;
-}
-.card {
-  background-color: var(--branco);
-  padding: 30px;
-  border-radius: 10px;
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-  text-align: center;
-  transition: transform 0.3s, box-shadow 0.3s;
-}
-.card:hover {
-  transform: translateY(-10px);
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
-}
-.card i {
-  font-size: 2.5em;
-  color: var(--vermelho);
-  margin-bottom: 20px;
-}
-.card h3 {
-  color: var(--preto);
-  margin-bottom: 15px;
 }
 
 @media (max-width: 768px) {
@@ -152,21 +409,49 @@ nav{
   }
 }
 
+.card {
+  background-color: var(--branco);
+  padding: 30px;
+  border-radius: 10px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.card:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+.card i {
+  font-size: 2.5em;
+  color: var(--vermelho);
+  margin-bottom: 20px;
+}
+
+.card h3 {
+  color: var(--preto);
+  margin-bottom: 15px;
+}
+
+/* Planos */
 .planos {
-  padding: 80px 0;
   background-color: #f5f5f5;
 }
+
 .planos h2 {
   text-align: center;
   font-size: 2.5em;
   margin-bottom: 50px;
   color: var(--preto);
 }
+
 .cards.plano {
   display: grid;
   gap: 30px;
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
 }
+
 .card-plano {
   background-color: var(--branco);
   padding: 30px;
@@ -174,55 +459,66 @@ nav{
   text-align: center;
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
 }
+
 .card-plano.destaque {
   transform: scale(1.05);
   background-color: var(--preto);
   color: var(--branco);
 }
+
 .card-plano.destaque h3,
 .card-plano.destaque .preco {
   color: var(--branco);
 }
+
 .preco {
   font-size: 2.5em;
   color: var(--vermelho);
   margin: 20px 0;
 }
+
 .preco span {
   font-size: 0.5em;
   color: inherit;
 }
+
 .card-plano ul {
   list-style: none;
   margin: 25px 0;
 }
+
 .card-plano li {
   margin: 10px 0;
   text-align: left;
   padding-left: 25px;
   position: relative;
 }
+
 .card-plano li i {
   position: absolute;
   left: 0;
   top: 4px;
 }
 
+/* Contato */
 .contato {
-  padding: 80px 0;
   background-color: var(--branco);
 }
+
 .contato h2 {
   text-align: center;
   font-size: 2.5em;
   margin-bottom: 50px;
   color: var(--preto);
 }
+
+/* Organização do conteúdo de Contato */
 .contato-content {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 50px;
 }
+
 .contato-form input,
 .contato-form textarea {
   width: 100%;
@@ -232,6 +528,7 @@ nav{
   border-radius: 5px;
   font-size: 1em;
 }
+
 .contato-form input:focus,
 .contato-form textarea:focus {
   outline: none;
@@ -242,7 +539,7 @@ input::placeholder,
 textarea::placeholder {
   font-family: var(--font-family, 'Arial, sans-serif');
   font-size: 1em;
-  color: #999; 
+  color: #999;
 }
 
 .contato-info {
@@ -250,56 +547,74 @@ textarea::placeholder {
   padding: 30px;
   border-radius: 10px;
 }
+
 .info-item {
   margin-bottom: 30px;
   display: flex;
   align-items: center;
   gap: 15px;
 }
+
 .info-item i {
   font-size: 1.5em;
   color: var(--vermelho);
 }
 
-@media (max-width: 768px) {
-  .contato-content {
-    grid-template-columns: 1fr;
-  }
-  .card-plano.destaque {
-    transform: scale(1);
-  }
+/* Footer */
+footer {
+  background-color: var(--preto);
+  color: var(--branco);
+  padding: 20px 0;
+  text-align: center;
 }
 
-.check-animation {
-  width: 100px;
-  height: 100px;
-  border-radius: 50%;
+footer .social-icons {
+  margin-top: 10px;
+}
+
+footer .social-icons a {
+  color: var(--branco);
+  margin: 0 10px;
+  font-size: 1.5em;
+  transition: color 0.3s;
+}
+
+footer .social-icons a:hover {
+  color: var(--vermelho);
+}
+
+/* Botão e Efeitos Adicionais */
+.cta-button {
   background-color: var(--vermelho);
-  margin: 0 auto 30px;
-  position: relative;
-  animation: scaleUp 0.5s ease-in-out;
+  color: var(--branco);
+  padding: 15px 40px;
+  border: none;
+  border-radius: 5px;
+  font-size: 1.1em;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  text-decoration: none;
+  animation: pulse 2s infinite;
 }
-.check-animation::after {
-  content: '';
-  position: absolute;
-  left: 25px;
-  top: 45px;
-  width: 40px;
-  height: 20px;
-  border-left: 5px solid var(--branco);
-  border-bottom: 5px solid var(--branco);
-  transform: rotate(-45deg);
+
+.cta-button:hover {
+  background-color: #c10510;
 }
-@keyframes scaleUp {
-  0% { transform: scale(0); }
-  80% { transform: scale(1.1); }
-  100% { transform: scale(1); }
+
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
 }
 
 .form-status {
   margin: 20px 0;
   text-align: center;
 }
+
 .success-message {
   color: #2ecc71;
   background: #ecfdf5;
@@ -307,6 +622,7 @@ textarea::placeholder {
   border-radius: 5px;
   border: 1px solid #2ecc71;
 }
+
 .error-message {
   color: #e74c3c;
   background: #fef2f2;
@@ -315,21 +631,102 @@ textarea::placeholder {
   border: 1px solid #e74c3c;
 }
 
-footer {
-  background-color: var(--preto);
-  color: var(--branco);
-  padding: 20px 0;
-  text-align: center;
+/* ====================== */
+/* REGRAS PARA MOBILE */
+/* ====================== */
+@media (max-width: 768px) {
+  /* Exibir o menu mobile e ajustar nav-links */
+  .menu-toggle {
+    display: block;
+  }
+
+  /* Menu lateral no mobile */
+  .nav-links {
+    position: fixed;
+    top: 0;
+    right: -100%;
+    height: 100vh;
+    width: 280px;
+    background: rgba(10, 10, 10, 0.98);
+    backdrop-filter: blur(25px);
+    flex-direction: column;
+    padding: 100px 30px;
+    transition: all 0.6s cubic-bezier(0.77, 0, 0.175, 1);
+    box-shadow: -10px 0 50px rgba(0, 0, 0, 0.3);
+  }
+  .nav-links.active {
+    right: 0;
+  }
+
+  .nav-links a {
+    font-size: 1rem;
+    padding: 10px 0;
+  }
+
+  /* Logo menor */
+  .logo {
+    font-size: 1.4rem;  /* Diminui para caber na mesma linha */
+    letter-spacing: 2px;
+  }
+
+  /* Se ficar tudo muito apertado, podemos reduzir ainda mais 
+     ou permitir quebra no header-content */
+  .header-content {
+    /* flex-wrap: wrap; */
+    gap: 10px;
+  }
+
+  /* Ajustar Hero */
+  .hero-content h1 {
+    font-size: 2.2em;
+  }
+  .hero-content p {
+    font-size: 1em;
+  }
+
+  /* Reduz o padding das sections */
+  section {
+    padding: 80px 0;
+  }
+
+  /* Reduz tamanho dos cards e espaçamentos */
+  .cards {
+    gap: 20px;
+  }
+
+  .card,
+  .card-plano,
+  .contato-info {
+    padding: 20px;
+  }
+
+  /* Formulário de contato empilhado */
+  .contato-content {
+    grid-template-columns: 1fr;
+    gap: 30px;
+    padding: 0 10px;
+  }
 }
-footer .social-icons {
-  margin-top: 10px;
-}
-footer .social-icons a {
-  color: var(--branco);
-  margin: 0 10px;
-  font-size: 1.5em;
-  transition: color 0.3s;
-}
-footer .social-icons a:hover {
-  color: var(--vermelho);
+
+@media (max-width: 480px) {
+  .logo {
+    font-size: 1.2rem;  /* Ainda menor em telas muito estreitas */
+    letter-spacing: 1px;
+  }
+
+  .nav-links a {
+    font-size: 0.9rem;
+  }
+
+  /* Ajusta ainda mais se quiser */
+  .hero-content h1 {
+    font-size: 1.8em;
+  }
+  .hero-content p {
+    font-size: 0.9em;
+  }
+  
+  section {
+    padding: 60px 0;
+  }
 }
